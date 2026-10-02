@@ -9,7 +9,7 @@
 
 Build a responsive online storefront for industrial, engineering, workshop, automotive, and safety tools. The storefront should reproduce the important customer-facing structure and shopping flows visible on the reference site while using the project's required stack: Next.js, JavaScript, and CSS Modules.
 
-This document describes the intended product and distinguishes it from the current frontend prototype. The storefront UI, responsive navigation, sample catalog, local search/category filtering, browser-persisted enquiry list, and WhatsApp enquiry action are implemented. The `/admin` route is an unlinked, no-index sign-in preview with disabled fields; it is not authentication or an access-control boundary. The database, full product import, server-backed search, checkout, payments, admin authentication, and order management are not implemented.
+This document describes the intended product and distinguishes it from the current frontend prototype. Implemented UI includes responsive storefront navigation, sample category and product routes, local catalog search and sorting, a browser-persisted enquiry list, a guest quotation form with WhatsApp handoff, and unlinked no-index `/admin` and `/admin/dashboard` previews. Admin fields and controls are disabled; these routes are not authentication or access-control boundaries. The database, full product import, server-backed search, real checkout/payments, admin authentication, and order management are not implemented.
 
 ## 2. Product Goals
 
@@ -35,7 +35,7 @@ These details were observed from the public homepage and navigation; they do not
 - Example subcategories include cutting and sawing, drilling and holemaking, threading and tapping, milling, bore gauges, calipers, hand tools, power tools, air tools, abrasives, automotive service tools, and adhesives.
 - The homepage includes product listings, a checkout discount promotion (`UTL25NEW`), and a WhatsApp contact entry.
 - The site describes delivery across Kenya and parts of East Africa. Actual eligible destinations, rates, and timelines have not been confirmed.
-- A public WordPress API reported 2,646 product records on 2026-10-02. No records or product images have been imported into this project.
+- A public WordPress API reported 2,646 product records on 2026-10-02. The frontend contains eight sample product records with reference-site image URLs; this is not a full catalog import, and those product details, current pricing, and availability are not authoritative.
 - The reference site's current payment methods and payment provider have not been verified. M-Pesa is a local-market recommendation for this project, not a claim about the reference site's setup.
 
 ## 5. Scope

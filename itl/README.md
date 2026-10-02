@@ -4,7 +4,7 @@ A JavaScript and Next.js storefront project modeled on the publicly visible cata
 
 ## Project Status
 
-The frontend prototype is implemented: it includes a responsive storefront, sample product catalog, category/search filters, a browser-persisted enquiry list, and a WhatsApp enquiry action. A separate `/admin` sign-in preview is intentionally unlinked and marked no-index. Its disabled fields are not authentication and do not protect admin data.
+The frontend prototype includes a responsive storefront, sample category and product routes, search/sort/filter controls, a browser-persisted enquiry list, a guest quotation form with WhatsApp handoff, and a separate admin dashboard preview. `/admin` and `/admin/dashboard` are unlinked from the public storefront and marked no-index. Admin controls are disabled; this UI is not authentication and does not protect admin data.
 
 The database, complete catalog import, real checkout, payment processing, email, admin authentication, and order-management tools are not implemented or configured. Sample catalog content is a small frontend fixture, not a full or authoritative inventory.
 
@@ -67,6 +67,13 @@ src/
       page.js          Unlinked admin sign-in preview
       sign-in.js       Admin preview UI
       admin.module.css Admin styles
+      dashboard/       Unlinked dashboard preview
+    category/[slug]/   Sample category pages
+    product/[slug]/    Sample product details
+    enquiry/           Guest quotation form
+  components/          Shared catalog and enquiry UI
+  data/catalog.js      Sample categories, products and hero slides
+  lib/enquiry.js       Browser-only enquiry-list persistence
 public/               Static assets
 docs/
   PRODUCT_REQUIREMENTS.md
@@ -76,7 +83,7 @@ As the storefront grows, keep route-specific and component-specific styles in `.
 
 ## Configuration and Secrets
 
-No runtime environment variables are required by the starter. When database or payment integrations are approved, document their variable names in an `.env.example` file and keep real credentials in an untracked local `.env.local` or deployment secret store. Never expose database service-role keys, payment secrets, or webhook secrets in browser code or commit them to source control.
+No runtime environment variables are required by the frontend prototype. When database or payment integrations are approved, document their variable names in an `.env.example` file and keep real credentials in an untracked local `.env.local` or deployment secret store. Never expose database service-role keys, payment secrets, or webhook secrets in browser code or commit them to source control.
 
 ## Reference and Data Notes
 

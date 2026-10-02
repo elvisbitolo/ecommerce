@@ -10,8 +10,8 @@ export default function AdminSignIn() {
       </Link>
       <section className={styles.panel} aria-labelledby="admin-title">
         <div className={styles.brandRow}>
-          <span className={styles.brandMark}>ITL</span>
-          <span>STAFF WORKSPACE</span>
+          <span className={styles.brandMark}>UTL</span>
+          <span>UNITED TOOLS LTD<br />STAFF WORKSPACE</span>
         </div>
         <div className={styles.lockMark}><KeyRound size={23} /></div>
         <p className={styles.eyebrow}>ADMINISTRATION</p>
@@ -32,7 +32,7 @@ export default function AdminSignIn() {
         <button className={styles.submit} type="button" disabled>Sign-in will be enabled in the backend phase</button>
         <p className={styles.privacy}>This route is omitted from storefront navigation and marked no-index. A private URL is not a security control.</p>
       </section>
-      <span className={styles.footerNote}>ITL · STAFF ACCESS</span>
+      <span className={styles.footerNote}>UTL · STAFF ACCESS</span>
     </main>
   );
 }

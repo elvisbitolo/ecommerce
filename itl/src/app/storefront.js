@@ -9,10 +9,6 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Drill,
-  Gauge,
-  HardHat,
-  Hammer,
   Menu,
   MessageCircle,
   Minus,
@@ -24,110 +20,8 @@ import {
   X,
 } from "lucide-react";
 import { startTransition, useEffect, useState } from "react";
+import { categories, products, slides } from "../data/catalog";
 import styles from "./storefront.module.css";
-
-const categories = [
-  { name: "Engineering & tooling", detail: "Cutting, drilling, milling", icon: Drill },
-  { name: "Measuring tools", detail: "Calipers, gauges, levels", icon: Gauge },
-  { name: "Tools & accessories", detail: "Hand, power & air tools", icon: Hammer },
-  { name: "Abrasives", detail: "Wheels, discs, finishing", icon: BadgeCheck },
-  { name: "Automotive tools", detail: "Garage & service tools", icon: Truck },
-  { name: "Safety & site", detail: "PPE, ladders, essentials", icon: HardHat },
-];
-
-const products = [
-  {
-    id: "mitutoyo-7301a",
-    name: "Mitutoyo 7301A Dial Thickness Gauge",
-    brand: "MITUTOYO",
-    category: "Measuring tools",
-    detail: "0-10 mm · 0.01 mm graduation",
-    image: "https://utl.co.ke/wp-content/uploads/2026/04/Mitutoyo-7301A-Dial-Thickness-Gauge-0-10mm-0.01mm-300x300.jpg",
-  },
-  {
-    id: "moore-wright-caliper",
-    name: "Moore & Wright Digital Caliper 300mm",
-    brand: "MOORE & WRIGHT",
-    category: "Measuring tools",
-    detail: "12 in · Digital readout",
-    image: "https://utl.co.ke/wp-content/uploads/2026/09/Moore-Wright-Digital-Caliper-300mm-12inch-300x300.jpg",
-  },
-  {
-    id: "ozar-air-sander",
-    name: "OZAR Air Sander 6 inch",
-    brand: "OZAR",
-    category: "Tools & accessories",
-    detail: "Pneumatic · Workshop finish",
-    image: "https://utl.co.ke/wp-content/uploads/2026/07/OZAR-Air-Sander-5inch-6Inch-without-Vacuum-ASA-9454-300x300.jpg",
-  },
-  {
-    id: "sterling-cup-wheel",
-    name: "Sterling White Straight Cup Wheel",
-    brand: "STERLING ABRASIVES",
-    category: "Abrasives",
-    detail: "200 x 80 x 32 mm",
-    image: "https://utl.co.ke/wp-content/uploads/2025/01/Sterling-Grinding-Wheel-White-Straight-Cup-1c-300x300.jpg",
-  },
-  {
-    id: "casoman-impact-set",
-    name: "CASOMAN 18-Piece Impact Drive Set",
-    brand: "CASOMAN",
-    category: "Tools & accessories",
-    detail: "Impact drive tool accessories",
-    image: "https://utl.co.ke/wp-content/uploads/2026/07/CASOMAN-18pcs-Impact-Drive-Tool-Accessory-Set-300x300.jpg",
-  },
-  {
-    id: "draper-air-riveter",
-    name: "Draper Air Riveter 16851",
-    brand: "DRAPER",
-    category: "Automotive tools",
-    detail: "Pneumatic riveting tool",
-    image: "https://utl.co.ke/wp-content/uploads/2026/07/Draper-Air-Riveter-16851_1__85795-300x300.jpg",
-  },
-  {
-    id: "acl-flexigauge",
-    name: "ACL Flexigauge 300mm Red",
-    brand: "ACL",
-    category: "Automotive tools",
-    detail: "AR-1 · 0.051-0.152 mm",
-    image: "https://utl.co.ke/wp-content/uploads/2026/07/ACL-Flexigauge-Red-AR-1-300x300.jpg",
-  },
-  {
-    id: "plastic-welding-machine",
-    name: "Plastic Welding Machine 150W",
-    brand: "WORKSHOP TOOLS",
-    category: "Tools & accessories",
-    detail: "Repair and fabrication",
-    image: "https://utl.co.ke/wp-content/uploads/2026/07/Plastic-Welding-Gun-150W-300x300.jpg",
-  },
-];
-
-const slides = [
-  {
-    eyebrow: "MACHINING TOOLS",
-    title: "Mill. Slot. Shape.",
-    copy: "End mills and slot drills for the work that calls for precision.",
-    image: "https://utl.co.ke/wp-content/uploads/2026/06/slider-33-end-mills-and-slot-drills-utl.jpg",
-    category: "Engineering & tooling",
-    action: "Explore engineering tools",
-  },
-  {
-    eyebrow: "ABRASIVES RANGE",
-    title: "Finish with confidence.",
-    copy: "Cutting, grinding and finishing essentials for your workshop.",
-    image: "https://utl.co.ke/wp-content/uploads/2026/05/slider-32-abrasives-range-utl.jpg",
-    category: "Abrasives",
-    action: "Explore abrasives",
-  },
-  {
-    eyebrow: "PROFESSIONAL AIR TOOLS",
-    title: "Power your workshop.",
-    copy: "Dependable pneumatic tools for busy bays and production floors.",
-    image: "https://utl.co.ke/wp-content/uploads/2025/11/slider-29-NEW-ARRIVALS-DENZEL-b-utl.jpg",
-    category: "Tools & accessories",
-    action: "Explore workshop tools",
-  },
-];
 
 const whatsappNumber = "254774888373";
 
@@ -237,7 +131,7 @@ export default function Storefront() {
         <nav className={`${styles.categoryNav} ${menuOpen ? styles.categoryNavOpen : ""}`} aria-label="Product categories">
           <button className={category === "All products" ? styles.navActive : ""} type="button" onClick={() => selectCategory("All products")}>All products</button>
           {categories.map((item) => (
-            <button className={category === item.name ? styles.navActive : ""} key={item.name} type="button" onClick={() => selectCategory(item.name)}>{item.name}<ChevronDown size={13} /></button>
+            <Link className={category === item.name ? styles.navActive : ""} href={`/category/${item.slug}`} key={item.name}>{item.name}<ChevronDown size={13} /></Link>
           ))}
         </nav>
       </header>
@@ -250,7 +144,7 @@ export default function Storefront() {
             <p className={styles.eyebrow}><span />{slide.eyebrow}</p>
             <h1>{slide.title}</h1>
             <p className={styles.heroDescription}>{slide.copy}</p>
-            <button className={styles.heroButton} type="button" onClick={() => selectCategory(slide.category)}>{slide.action}<ArrowRight size={17} /></button>
+              <Link className={styles.heroButton} href={`/category/${slide.categorySlug}`}>{slide.action}<ArrowRight size={17} /></Link>
           </div>
           <div className={styles.heroControls}>
             <span>0{slideIndex + 1} / 0{slides.length}</span>
@@ -279,11 +173,11 @@ export default function Storefront() {
           </div>
           <div className={styles.categoryGrid}>
             {categories.map(({ name, detail, icon: Icon }, index) => (
-              <button className={styles.categoryTile} type="button" key={name} onClick={() => selectCategory(name)}>
+                <Link className={`${styles.categoryTile} ${styles[`tileTone${index + 1}`]}`} href={`/category/${categories[index].slug}`} key={name}>
                 <span className={`${styles.categoryIcon} ${styles[`tone${index + 1}`]}`}><Icon size={25} strokeWidth={1.6} /></span>
                 <span className={styles.categoryText}><strong>{name}</strong><small>{detail}</small></span>
                 <ArrowUpRight className={styles.categoryArrow} size={17} />
-              </button>
+                </Link>
             ))}
           </div>
         </section>
@@ -311,7 +205,7 @@ export default function Storefront() {
                   </div>
                   <div className={styles.productInfo}>
                     <p className={styles.brandLabel}>{product.brand}</p>
-                    <h3><button className={styles.productNameButton} type="button" onClick={() => setSelectedProduct(product)}>{product.name}</button></h3>
+                    <h3><Link className={styles.productNameButton} href={`/product/${product.slug}`}>{product.name}</Link></h3>
                     <p className={styles.productDetail}>{product.detail}</p>
                     <div className={styles.productBottom}><strong>Price on request</strong><button type="button" aria-label={`Add ${product.name} to enquiry list`} onClick={() => addProduct(product)}><Plus size={17} /></button></div>
                   </div>
@@ -367,7 +261,8 @@ export default function Storefront() {
               <Image src={item.image} alt="" width={70} height={70} />
               <div className={styles.drawerItemText}><strong>{item.name}</strong><small>{item.brand} · Price on request</small><div className={styles.quantity}><button type="button" aria-label={`Remove one ${item.name}`} onClick={() => adjustQuantity(item.id, -1)}><Minus size={13} /></button><span>{item.quantity}</span><button type="button" aria-label={`Add one ${item.name}`} onClick={() => adjustQuantity(item.id, 1)}><Plus size={13} /></button></div></div>
             </div>)}</div>
-            <a className={styles.whatsappCheckout} href={whatsappLink} target="_blank" rel="noreferrer"><MessageCircle size={18} /> Send enquiry on WhatsApp <ArrowRight size={17} /></a>
+            <Link className={styles.whatsappCheckout} href="/enquiry"><ShoppingBag size={18} /> Continue to quotation <ArrowRight size={17} /></Link>
+            <a className={styles.drawerQuickWhatsapp} href={whatsappLink} target="_blank" rel="noreferrer"><MessageCircle size={15} /> Send this list directly in WhatsApp</a>
             <p className={styles.drawerNote}>We’ll confirm current pricing, availability and delivery with you.</p>
           </> : <div className={styles.emptyCart}><ShoppingBag size={30} /><h3>Your list is empty</h3><p>Add products to ask our team about price and availability.</p><button type="button" onClick={() => setCartOpen(false)}>Continue browsing</button></div>}
         </aside>

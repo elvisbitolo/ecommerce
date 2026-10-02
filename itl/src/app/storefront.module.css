@@ -67,8 +67,8 @@
 
 .categoryNav { width: min(1320px, 90%); min-height: 43px; display: flex; align-items: stretch; gap: clamp(15px, 2.4vw, 36px); margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .categoryNav::-webkit-scrollbar { display: none; }
-.categoryNav button { position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; gap: 4px; padding: 0 0 11px; border: 0; color: #59666e; background: transparent; font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; }
-.categoryNav button:hover, .categoryNav .navActive { color: var(--blue); }
+.categoryNav button, .categoryNav a { position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; gap: 4px; padding: 0 0 11px; border: 0; color: #59666e; background: transparent; font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; }
+.categoryNav button:hover, .categoryNav a:hover, .categoryNav .navActive { color: var(--blue); }
 .categoryNav .navActive::after { position: absolute; right: 0; bottom: 0; left: 0; height: 2px; background: var(--orange); content: ""; }
 
 .content { width: min(1320px, 90%); margin: 24px auto 0; }
@@ -209,6 +209,8 @@
 .whatsappCheckout svg:last-child { margin-left: auto; margin-right: 14px; }
 .whatsappCheckout svg:first-child { margin-left: auto; }
 .drawerNote { margin: 10px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; text-align: center; }
+.drawerQuickWhatsapp { display: inline-flex; align-self: center; align-items: center; gap: 6px; margin-top: 10px; color: #217a61; font-size: 10px; font-weight: 700; }
+.drawerQuickWhatsapp:hover { color: #155b48; }
 .emptyCart { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .emptyCart > svg { color: var(--blue); }
 .emptyCart h3 { margin: 13px 0 5px; font-family: var(--font-display), sans-serif; font-size: 26px; }
@@ -247,7 +249,7 @@
   .bagButton b { width: 18px; height: 18px; }
   .categoryNav { width: 100%; min-height: 0; display: none; flex-direction: column; gap: 0; padding: 0 5% 8px; border-top: 1px solid var(--line); }
   .categoryNavOpen { display: flex; }
-  .categoryNav button { min-height: 39px; justify-content: space-between; padding: 0 1px; border-bottom: 1px solid #edf0f1; }
+  .categoryNav button, .categoryNav a { min-height: 39px; justify-content: space-between; padding: 0 1px; border-bottom: 1px solid #edf0f1; }
   .categoryNav .navActive::after { right: auto; width: 3px; height: 20px; top: 9px; bottom: auto; }
   .content { width: 90%; margin-top: 14px; }
   .hero { min-height: 370px; }
