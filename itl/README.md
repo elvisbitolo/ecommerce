@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ITL Storefront
 
-## Getting Started
+A JavaScript and Next.js storefront project modeled on the publicly visible catalog and shopping experience at [United Tools Ltd](https://utl.co.ke/). The implementation is being built in this repository and is not affiliated with or operated by United Tools Ltd.
 
-First, run the development server:
+## Project Status
+
+The frontend prototype is implemented: it includes a responsive storefront, sample product catalog, category/search filters, a browser-persisted enquiry list, and a WhatsApp enquiry action. A separate `/admin` sign-in preview is intentionally unlinked and marked no-index. Its disabled fields are not authentication and do not protect admin data.
+
+The database, complete catalog import, real checkout, payment processing, email, admin authentication, and order-management tools are not implemented or configured. Sample catalog content is a small frontend fixture, not a full or authoritative inventory.
+
+The reference site has a broad industrial-tools catalog, category navigation, product listings, a checkout promotion, and a WhatsApp contact entry. Its homepage navigation includes Engineering - Tooling; Measuring, Marking & Testing; Tools & Accessories; Abrasives; Automotive Tools; Sealants & Lubricants; and Safety.
+
+The public WordPress API reported 2,646 product records when checked on 2026-10-02. That catalog has not been exported into this project. The site's `robots.txt` specifies a 30-second crawl delay, so a full public crawl must be paced accordingly. Product copy, images, stock, shipping terms, and the reference site's active payment gateway still need confirmation before they can be reproduced accurately.
+
+See [the product requirements document](docs/PRODUCT_REQUIREMENTS.md) for proposed scope, requirements, assumptions, and decisions that remain open.
+
+## Technology
+
+The current application foundation is:
+
+- Next.js App Router
+- React
+- JavaScript (not TypeScript)
+- CSS Modules for component-scoped styles
+- Lucide React for interface icons
+
+There is no database, authentication, payment, email, or server-backed product search configured. Supabase/PostgreSQL and a Kenya-capable M-Pesa gateway are proposals in the requirements document, not installed or approved integrations.
+
+## Requirements
+
+- Node.js compatible with the installed Next.js version
+- npm
+
+## Run Locally
+
+From this directory, install dependencies and start the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The development server uses the `src/app` directory.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Available Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev    # Start the development server
+npm run lint   # Run ESLint
+npm run build  # Create a production build
+npm start      # Serve the production build
+```
 
-## Learn More
+Run `npm run build` before deploying. `npm start` requires a successful production build first.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+src/
+  app/
+    globals.css       Global styles
+    layout.js         Root layout and document metadata
+    page.js           Home page
+    storefront.js     Interactive storefront prototype
+    storefront.module.css  Storefront styles
+    admin/
+      page.js          Unlinked admin sign-in preview
+      sign-in.js       Admin preview UI
+      admin.module.css Admin styles
+public/               Static assets
+docs/
+  PRODUCT_REQUIREMENTS.md
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+As the storefront grows, keep route-specific and component-specific styles in `.module.css` files. Keep global CSS for resets, fonts, and design tokens. Do not introduce TypeScript or a utility-CSS framework without an explicit project decision.
 
-## Deploy on Vercel
+## Configuration and Secrets
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+No runtime environment variables are required by the starter. When database or payment integrations are approved, document their variable names in an `.env.example` file and keep real credentials in an untracked local `.env.local` or deployment secret store. Never expose database service-role keys, payment secrets, or webhook secrets in browser code or commit them to source control.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Reference and Data Notes
+
+The current reference is [utl.co.ke](https://utl.co.ke/). The implementation should use only product data and media that the project is authorized to use. The product-count observation is a point-in-time API count, not a local catalog export. Reference-site payment methods, exact shipping prices, inventory rules, and all product content have not yet been verified.
+
+## Deployment
+
+No production deployment is configured. Vercel is a proposed hosting option for the Next.js application; the production database, image storage, domains, payment credentials, and webhook URL must be configured and tested before accepting orders.

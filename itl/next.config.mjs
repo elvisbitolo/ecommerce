@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utl.co.ke",
+        pathname: "/wp-content/uploads/**",
+      },
+    ],
+  },
   reactCompiler: true,
 };
 
