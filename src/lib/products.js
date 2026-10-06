@@ -1,55 +1,46 @@
-import { createClient } from "@supabase/supabase-js";
-import { products as sampleProducts } from "../data/catalog";
-import { getSupabaseConfig } from "./supabase/config";
+import { prisma } from "./prisma";
+
+const catalogSelect = {
+  id: true,
+  slug: true,
+  name: true,
+  sku: true,
+  brand: { select: { slug: true, name: true } },
+  categories: { select: { slug: true, name: true } },
+  shortDescription: true,
+  description: true,
+  images: true,
+  inStock: true,
+};
 
 function mapProduct(row) {
+  const category = row.categories?.[0];
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
     sku: row.sku ?? "",
-    brand: row.brand,
-    category: row.category_name,
-    categorySlug: row.category_slug,
-    detail: row.detail,
-    image: row.image_url,
+    brand: row.brand?.name ?? "",
+    category: category?.name ?? "",
+    categorySlug: category?.slug ?? "",
+    detail: row.shortDescription ?? row.description ?? "",
+    image: row.images?.[0] ?? "",
+    inStock: row.inStock,
   };
 }
 
-function createPublicClient() {
-  const config = getSupabaseConfig();
-  if (!config) return null;
-
-  return createClient(config.url, config.publishableKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
-
 export async function getCatalogProducts() {
-  const supabase = createPublicClient();
-  if (!supabase) return sampleProducts;
-
-  const { data, error } = await supabase
-    .from("products")
-    .select("id, slug, name, sku, brand, category_name, category_slug, detail, image_url")
-    .eq("is_published", true)
-    .order("name");
-
-  if (error) throw new Error(`Could not load the product catalog: ${error.message}`);
-  return data.map(mapProduct);
+  const rows = await prisma.product.findMany({
+    select: catalogSelect,
+    orderBy: { name: "asc" },
+  });
+  return rows.map(mapProduct);
 }
 
 export async function getCatalogProductBySlug(slug) {
-  const supabase = createPublicClient();
-  if (!supabase) return sampleProducts.find((product) => product.slug === slug) ?? null;
-
-  const { data, error } = await supabase
-    .from("products")
-    .select("id, slug, name, sku, brand, category_name, category_slug, detail, image_url")
-    .eq("slug", slug)
-    .eq("is_published", true)
-    .maybeSingle();
-
-  if (error) throw new Error(`Could not load product details: ${error.message}`);
-  return data ? mapProduct(data) : null;
+  const row = await prisma.product.findFirst({
+    where: { slug, isPublished: true },
+    select: catalogSelect,
+  });
+  return row ? mapProduct(row) : null;
 }
