@@ -1,0 +1,49 @@
+.section {
+  padding-block: 30px 50px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 26px;
+}
+
+.tabs button {
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--utl-gray600);
+  background: var(--utl-gray25);
+  border: 1px solid var(--utl-gray100);
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tabs button:hover {
+  color: var(--utl-blue);
+}
+
+.tabs button.tabActive {
+  color: #fff;
+  background: var(--utl-blue);
+  border-color: var(--utl-blue);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1199px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

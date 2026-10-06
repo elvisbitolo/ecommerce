@@ -1,0 +1,52 @@
+.page {
+  max-width: 720px;
+  margin-inline: auto;
+  padding: 90px 20px 110px;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--utl-blue);
+  background: rgba(44, 129, 193, 0.12);
+}
+
+.page h1 {
+  margin: 18px 0 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.page p {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--utl-gray700);
+}
+
+.page p a {
+  color: var(--utl-blue);
+  text-decoration: underline;
+}
+
+.cta {
+  display: inline-flex;
+  margin-top: 26px;
+  padding: 13px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--utl-blue);
+  border-radius: 999px;
+}
+
+.cta:hover {
+  background: var(--utl-sky);
+}

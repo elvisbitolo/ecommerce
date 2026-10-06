@@ -1,39 +1,37 @@
 import { notFound } from "next/navigation";
 import CatalogView from "../../../components/CatalogView";
-import { categories, isProductInCategory } from "../../../data/catalog";
-import { getCatalogProducts } from "../../../lib/products";
+import { getCategoryProducts } from "../../../lib/products";
+import { prisma } from "../../../lib/prisma";
 
-export const dynamicParams = true;
-export const dynamic = "force-dynamic";
-
-export function generateStaticParams() {
-  return categories.map((category) => ({ slug: category.slug }));
-}
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const category = categories.find((item) => item.slug === slug);
-
-  if (!category) return { title: "Category not found" };
-
-  return {
-    title: category.name,
-    description: `${category.detail}. Browse tools from United Tools Ltd and enquire about current availability.`,
-  };
+  const category = await prisma.category.findUnique({ where: { slug }, select: { name: true } });
+  return { title: category?.name ? `${category.name} | United Tools Ltd` : "Category not found" };
 }
 
 export default async function CategoryPage({ params }) {
   const { slug } = await params;
-  const category = categories.find((item) => item.slug === slug);
+  const category = await prisma.category.findUnique({ where: { slug } });
   if (!category) notFound();
 
-  const products = await getCatalogProducts();
-  const categoryProducts = products.filter((product) => isProductInCategory(product, slug));
+  const parent = category.parentId
+    ? await prisma.category.findUnique({ where: { id: category.parentId }, select: { name: true } })
+    : null;
+
+  const products = await getCategoryProducts(slug);
+  const childCount = await prisma.category.count({ where: { parentId: category.id, isPublished: true } });
 
   return (
     <CatalogView
-      category={{ name: category.name, detail: category.detail, slug: category.slug }}
-      products={categoryProducts}
+      category={{
+        name: category.name,
+        detail: (parent ? `${parent.name} · ` : "") + (category.imageUrl ? "Browse the range and enquire for current pricing and availability." : "Browse the range and enquire for current pricing and availability."),
+        slug,
+        childCount,
+      }}
+      products={products}
     />
   );
 }

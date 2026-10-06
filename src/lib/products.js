@@ -32,7 +32,28 @@ function mapProduct(row) {
 export async function getCatalogProducts() {
   const rows = await prisma.product.findMany({
     select: catalogSelect,
-    orderBy: { name: "asc" },
+    orderBy: { position: "asc" },
+    take: 160,
+  });
+  return rows.map(mapProduct);
+}
+
+export async function getShopProducts(take = 160) {
+  const rows = await prisma.product.findMany({
+    where: { isPublished: true },
+    select: catalogSelect,
+    orderBy: { position: "asc" },
+    take,
+  });
+  return rows.map(mapProduct);
+}
+
+export async function getCategoryProducts(slug, take = 160) {
+  const rows = await prisma.product.findMany({
+    where: { isPublished: true, categories: { some: { slug } } },
+    select: catalogSelect,
+    orderBy: { position: "asc" },
+    take,
   });
   return rows.map(mapProduct);
 }

@@ -1,0 +1,97 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--utl-gray100);
+  border-radius: var(--utl-radius);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s var(--utl-ease);
+}
+
+.card:hover {
+  box-shadow: var(--utl-shadow-md);
+  transform: translateY(-3px);
+}
+
+.visual {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--utl-gray25);
+}
+
+.visual img {
+  object-fit: cover;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--utl-gray100), var(--utl-gray50));
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 16px;
+}
+
+.brand {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--utl-blue);
+}
+
+.name {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.name a:hover {
+  color: var(--utl-red);
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--utl-green);
+  white-space: nowrap;
+}
+
+.ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--utl-green);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.ask:hover {
+  background: #1d8b4c;
+}

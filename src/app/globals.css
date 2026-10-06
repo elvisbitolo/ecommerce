@@ -1,10 +1,74 @@
+@font-face {
+  font-family: "Satoshi-Variable";
+  src: url("./fonts/Satoshi-Variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("./fonts/Roboto-Variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("./fonts/RobotoSlab-Variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
-  --font-display: "Arial Narrow", "Liberation Sans Narrow", var(--font-geist-sans), sans-serif;
-  --color-ink: #17232c;
-  --color-muted: #65717a;
-  --color-blue: #174f73;
-  --color-orange: #e87531;
+  /* Brand palette (extracted from utl.co.ke Blonwe customizer) */
+  --utl-primary: #ffc21f; /* theme primary yellow */
+  --utl-primary-dark: #e8ac00;
+  --utl-blue: #004798; /* UTL navy */
+  --utl-sky: #2c81c1; /* header blue */
+  --utl-green: #25a55f;
+  --utl-red: #ef4056;
+  --utl-text: #1b1f22;
+  --utl-text-muted: #768088;
+  --utl-body-bg: #ffffff;
+
+  --utl-gray0: #fbfcfd;
+  --utl-gray25: #f8f9fa;
+  --utl-gray50: #f1f3f5;
+  --utl-gray100: #eceef0;
+  --utl-gray200: #e6e8eb;
+  --utl-gray300: #dfe2e6;
+  --utl-gray400: #ced4da;
+  --utl-gray500: #adb5bd;
+  --utl-gray600: #768088;
+  --utl-gray700: #4f575e;
+  --utl-gray800: #343a40;
+  --utl-gray900: #22262a;
+
+  --utl-orange50: #fff1e6;
+  --utl-orange500: #ffa94d;
+  --utl-orange600: #fd7e14;
+
+  --utl-red50: #ffebeb;
+  --utl-red600: #e53e3e;
+  --utl-red900: #7b1919;
+
+  /* Typography */
+  --utl-font-sans: "Satoshi-Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --utl-font-roboto: "Roboto", system-ui, sans-serif;
+  --utl-font-slab: "Roboto Slab", "Georgia", serif;
+
+  /* Layout */
+  --utl-gutter: 15px;
+  --utl-container: 1650px;
+  --utl-radius: 10px;
+  --utl-radius-form: 8px;
+  --utl-shadow-sm: 0 2px 8px rgba(27, 31, 34, 0.08);
+  --utl-shadow-md: 0 8px 28px rgba(27, 31, 34, 0.14);
+  --utl-ease: cubic-bezier(0.48, 0, 0.12, 1);
 }
 
 *,
@@ -21,9 +85,12 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  color: var(--color-ink);
-  background: #f3f5f5;
-  font-family: var(--font-geist-sans), sans-serif;
+  color: var(--utl-text);
+  background: var(--utl-body-bg);
+  font-family: var(--utl-font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -49,15 +116,88 @@ a {
 
 button {
   color: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 img {
   max-width: 100%;
+  display: block;
 }
 
 ::selection {
   color: #fff;
-  background: #174f73;
+  background: var(--utl-sky);
+}
+
+.utl-container {
+  width: 100%;
+  max-width: var(--utl-container);
+  margin-inline: auto;
+  padding-inline: var(--utl-gutter);
+}
+
+.utl-container--flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.utl-kicker {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.utl-row-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 20px 26px;
+}
+
+.utl-row-head h2 {
+  margin: 8px 0 0;
+  font-family: var(--utl-font-sans);
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.utl-see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--utl-blue);
+  border-radius: 6px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.utl-see-all:hover {
+  background: var(--utl-sky);
+  color: #fff;
+}
+
+.utl-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

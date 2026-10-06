@@ -18,7 +18,7 @@ function ProductCard({ product }) {
   return (
     <article className={styles.productCard}>
       <Link className={styles.productImage} href={`/product/${product.slug}`} aria-label={`View ${product.name}`}>
-        <Image src={product.image} alt={product.name} fill sizes="(max-width: 600px) 50vw, (max-width: 940px) 33vw, 25vw" />
+        {product.image ? <Image src={product.image} alt={product.name} fill sizes="(max-width: 600px) 50vw, (max-width: 940px) 33vw, 25vw" /> : <span />}
         <span>{product.category}</span>
       </Link>
       <div className={styles.productBody}>
@@ -57,7 +57,7 @@ export default function CatalogView({ category, products }) {
       <header className={styles.intro}>
         <p className={styles.kicker}>UNITED TOOLS LTD · PRODUCT RANGE</p>
         <h1>{category.name}</h1>
-        <p>{category.detail}. Browse the sample selection, or contact our team for the full range and current availability.</p>
+        <p>{category.detail} Browse the range, or contact our team for current availability and delivery.</p>
       </header>
       <div className={styles.toolbar}>
         <label className={styles.search}>
@@ -73,19 +73,19 @@ export default function CatalogView({ category, products }) {
             <option value="brand">Brand A-Z</option>
           </select>
         </label>
-        <span className={styles.count}>{filteredProducts.length} sample {filteredProducts.length === 1 ? "product" : "products"}</span>
+        <span className={styles.count}>{filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}</span>
       </div>
       {filteredProducts.length ? (
         <div className={styles.grid}>{filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}</div>
       ) : (
         <section className={styles.empty}>
           <Search size={26} />
-          <h2>{query ? "No matching products" : "Catalog selection in progress"}</h2>
-          <p>{query ? "Try another search term." : "This category does not have sample items yet. Ask our team for the complete range."}</p>
+          <h2>{query ? "No matching products" : "No products in this range"}</h2>
+          <p>{query ? "Try another search term." : "Ask our team for this range and current availability."}</p>
           {query ? <button type="button" onClick={() => setQuery("")}>Clear search</button> : <a href={`https://wa.me/254774888373?text=${encodeURIComponent(`Hello, I would like to enquire about your ${category.name} range.`)}`} target="_blank" rel="noreferrer">Ask about this range <ArrowRight size={15} /></a>}
         </section>
       )}
-      <p className={styles.dataNote}>Sample catalog only. Product descriptions, price and availability must be confirmed with United Tools Ltd.</p>
+      <p className={styles.dataNote}>Product descriptions, price and availability must be confirmed with United Tools Ltd before ordering.</p>
     </main>
   );
 }
