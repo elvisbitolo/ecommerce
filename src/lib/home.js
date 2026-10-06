@@ -71,6 +71,18 @@ async function normalizeHref(href) {
   return resolved;
 }
 
+function dedupeProducts(rows) {
+  const seen = new Set();
+  const unique = [];
+  for (const row of rows) {
+    const key = `${row.brand?.name ?? ""}|${row.name}`.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(row);
+  }
+  return unique;
+}
+
 async function productsInCategories(slugs, take) {
   const rows = await prisma.product.findMany({
     where: { categories: { some: { slug: { in: slugs } } } },
@@ -78,7 +90,7 @@ async function productsInCategories(slugs, take) {
     orderBy: { position: "asc" },
     take,
   });
-  return rows.map(mapProduct);
+  return dedupeProducts(rows).map(mapProduct);
 }
 
 async function productsByBrand(brandSlug, take) {
@@ -88,7 +100,7 @@ async function productsByBrand(brandSlug, take) {
     orderBy: { position: "asc" },
     take,
   });
-  return rows.map(mapProduct);
+  return dedupeProducts(rows).map(mapProduct);
 }
 
 async function recentProducts(take) {
@@ -97,7 +109,7 @@ async function recentProducts(take) {
     orderBy: [{ position: "desc" }, { updatedAt: "desc" }],
     take,
   });
-  return rows.map(mapProduct);
+  return dedupeProducts(rows).map(mapProduct);
 }
 
 async function getHomeBlocks(placement) {
@@ -205,13 +217,14 @@ export async function getHomeData() {
   });
   const deckData = await Promise.all(decks);
 
+  const uniqueFeatured = dedupeProducts(featuredCategories);
   const featuredByCat = (slug) =>
-    featuredCategories.filter((p) => p.categories?.some((c) => c.slug === slug)).slice(0, 6).map(mapProduct);
+    uniqueFeatured.filter((p) => p.categories?.some((c) => c.slug === slug)).slice(0, 6).map(mapProduct);
 
   const settingMap = Object.fromEntries(settings.map((s) => [s.key, s.value]));
 
-  const eligible = featuredCategories.filter((p) => p.categories?.some((c) => c.slug === "power-tools"));
-  const powerTools = eligible.length >= 6 ? eligible.slice(0, 6) : await productsInCategories(["power-tools"], 6);
+  const featured = uniqueFeatured.filter((p) => p.categories?.some((c) => c.slug === "power-tools"));
+  const powerTools = featured.length >= 6 ? featured.slice(0, 6) : await productsInCategories(["power-tools"], 6);
 
   const hotBannerBlock = priceBanner[0] ?? null;
 
@@ -230,7 +243,7 @@ export async function getHomeData() {
     industries: tags.slice(0, 8),
     navCategories,
     arrivals: recent.slice(0, 4),
-    highlighted: featuredCategories.filter((p) => p.categories?.some((c) => c.slug === "abrasives")).slice(0, 4),
+    highlighted: uniqueFeatured.filter((p) => p.categories?.some((c) => c.slug === "abrasives")).slice(0, 4),
     promo3up: p3,
     fullWidth: fw,
     twoUp: tu,

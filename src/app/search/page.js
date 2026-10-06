@@ -9,7 +9,7 @@ export default async function SearchPage({ searchParams }) {
   const params = await searchParams;
   const q = (params?.q ?? "").toString().trim();
 
-  const products = q
+  const rows = q
     ? await prisma.product.findMany({
         where: {
           isPublished: true,
@@ -32,6 +32,14 @@ export default async function SearchPage({ searchParams }) {
         take: 60,
       })
     : [];
+  const seen = new Set();
+  const products = [];
+  for (const product of rows) {
+    const key = `${product.name}|${product.brand?.name ?? ""}`.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    products.push(product);
+  }
 
   return (
     <main className={styles.page}>

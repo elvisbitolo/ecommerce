@@ -12,7 +12,7 @@
 .category { margin: 0 0 8px; color: var(--orange); font-size: 9px; font-weight: 800; text-transform: uppercase; }
 .details h1 { max-width: 490px; margin: 0; font-family: var(--font-display), sans-serif; font-size: 43px; line-height: 1.02; }
 .sku { margin: 9px 0 0; color: #69767e; font-size: 10px; font-weight: 700; }
-.spec { margin: 14px 0 23px; color: var(--muted); font-size: 12px; }
+.spec { margin: 14px 0 23px; color: var(--muted); font-size: 12px; white-space: pre-line; }
 .priceBlock { display: grid; gap: 6px; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .priceBlock span { color: var(--muted); font-size: 9px; }
 .priceBlock strong { font-family: var(--font-display), sans-serif; font-size: 24px; }

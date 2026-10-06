@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
+import styles from "./blog.module.css";
 
 export const revalidate = 3600;
 export const metadata = { title: "From Our Blog | United Tools Ltd" };
@@ -10,10 +11,10 @@ export default async function BlogPage() {
     <main style={{ maxWidth: 1320, marginInline: "auto", paddingInline: 15, paddingBlock: "36px 70px", minHeight: "70vh" }}>
       <p style={{ margin: 0, fontSize: 13, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#768088" }}>Ideas from our team</p>
       <h1 style={{ margin: "10px 0 0", fontSize: "clamp(24px,3vw,40px)", fontWeight: 800 }}>From the blog</h1>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, marginTop: 28 }}>
+      <div className={styles.grid}>
         {posts.map((post) => (
-          <article key={post.id} style={{ border: "1px solid #eceef0", borderRadius: 10, overflow: "hidden", background: "#fff" }}>
-            <Link href={`/blog/${post.slug}`} style={{ aspectRatio: "16/10", position: "relative", display: "block", background: "#f1f3f5" }}>
+          <article key={post.id} className={styles.card}>
+            <Link href={`/blog/${post.slug}`} className={styles.cover}>
               {post.coverUrl ? <ImageTag src={post.coverUrl} alt="" /> : null}
             </Link>
             <div style={{ padding: "16px 18px" }}>

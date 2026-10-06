@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
+import styles from "./brand.module.css";
 
 export const revalidate = 3600;
 
@@ -17,12 +18,20 @@ export default async function BrandPage({ params }) {
   const brand = await prisma.brand.findUnique({ where: { slug }, select: { name: true, logoUrl: true } });
   if (!brand) notFound();
 
-  const products = await prisma.product.findMany({
+  const rows = await prisma.product.findMany({
     where: { isPublished: true, brand: { slug } },
     select: { id: true, slug: true, name: true, sku: true, brand: { select: { name: true } }, images: true },
     orderBy: { position: "asc" },
     take: 96,
   });
+  const seen = new Set();
+  const products = [];
+  for (const product of rows) {
+    const key = `${product.name}|${product.brand?.name ?? ""}`.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    products.push(product);
+  }
 
   return (
     <main style={{ maxWidth: 1320, marginInline: "auto", paddingInline: 15, paddingBlock: "36px 70px", minHeight: "70vh" }}>
@@ -31,10 +40,10 @@ export default async function BrandPage({ params }) {
       {brand.logoUrl && <img src={brand.logoUrl} alt={brand.name} style={{ marginTop: 18, height: 56, width: "auto" }} />}
       <p style={{ margin: "6px 0 0", color: "#768088", fontSize: 14 }}>{products.length} products available — prices confirmed on request.</p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 18, marginTop: 26 }}>
+      <div className={styles.grid}>
         {products.map((product) => (
-          <article key={product.id} style={{ border: "1px solid #eceef0", borderRadius: 10, overflow: "hidden", background: "#fff" }}>
-            <Link href={`/product/${product.slug}`} style={{ aspectRatio: "1/1", position: "relative", display: "block", background: "#f8f9fa" }}>
+          <article key={product.id} className={styles.card}>
+            <Link href={`/product/${product.slug}`} className={styles.thumb}>
               {product.images?.[0] ? <Image src={product.images[0]} alt="" fill sizes="300px" style={{ objectFit: "cover" }} /> : null}
             </Link>
             <div style={{ padding: "12px 14px 16px" }}>
