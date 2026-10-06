@@ -83,6 +83,18 @@ function dedupeProducts(rows) {
   return unique;
 }
 
+function dedupeSlides(rows) {
+  const seen = new Set();
+  const unique = [];
+  for (const row of rows) {
+    const imageKey = row.imageUrl || `${row.title ?? ""}|${row.menuOrder ?? ""}`;
+    if (seen.has(imageKey)) continue;
+    seen.add(imageKey);
+    unique.push(row);
+  }
+  return unique;
+}
+
 async function productsInCategories(slugs, take) {
   const rows = await prisma.product.findMany({
     where: { categories: { some: { slug: { in: slugs } } } },
@@ -229,7 +241,7 @@ export async function getHomeData() {
   const hotBannerBlock = priceBanner[0] ?? null;
 
   const [slides, p3, fw, tu, hotBanner] = await Promise.all([
-    normalizeHrefs(heroSlides),
+    normalizeHrefs(dedupeSlides(heroSlides)),
     normalizeHrefs(promo3up),
     normalizeHrefs(fullWidth.slice(0, 3)),
     normalizeHrefs(twoUp),
