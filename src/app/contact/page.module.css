@@ -1,0 +1,15 @@
+.page { min-height: 100vh; background: #f3f5f5; color: #17232c; }
+.hero { background: linear-gradient(135deg, #1d5676 0%, #173c51 100%); color: #fff; }
+.inner { width: min(1100px, 90%); margin: 0 auto; padding: 74px 0 70px; }
+.kicker { margin: 0 0 12px; color: #ffbf8b; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.hero h1 { margin: 0 0 12px; font-size: clamp(2.6rem, 4vw, 4.5rem); line-height: 1.02; }
+.hero p { max-width: 700px; margin: 0; color: rgba(255,255,255,0.82); font-size: 1.05rem; line-height: 1.7; }
+.grid { width: min(1100px, 90%); margin: 0 auto; padding: 54px 0 90px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.card { background: #fff; border: 1px solid #dfe5e8; padding: 28px 24px; }
+.card h2 { margin: 0 0 14px; font-size: 1.35rem; }
+.card a { display: block; margin: 0 0 8px; color: #174f73; font-weight: 700; }
+.card p { margin: 0 0 8px; color: #53636d; line-height: 1.7; }
+.card a:last-child { margin-top: 12px; }
+.card a:hover { color: #0f3552; }
+.card a:last-child { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 14px; background: #ef6d1e; color: #fff; border-radius: 999px; }
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }

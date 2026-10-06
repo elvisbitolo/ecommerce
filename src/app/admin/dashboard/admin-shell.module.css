@@ -1,0 +1,18 @@
+.adminShell { --ink: #17232c; --muted: #65717a; --line: #dce2e5; min-height: 100vh; color: var(--ink); background: #f3f5f6; }
+.adminTopbar { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 10px max(5vw, calc((100vw - 1320px) / 2)); border-bottom: 1px solid var(--line); background: #fff; }
+.adminBrand { display: flex; align-items: center; gap: 10px; color: var(--ink); }
+.adminBrand > span { width: 42px; height: 38px; display: grid; place-items: center; color: #fff; background: #174f73; font-family: var(--font-display), sans-serif; font-size: 22px; font-weight: 800; }
+.adminBrand > strong { display: grid; gap: 4px; font-size: 9px; }
+.adminBrand small { color: var(--muted); font-size: 7px; letter-spacing: .08em; }
+.adminTopbar > div { display: flex; align-items: center; gap: 20px; }
+.adminTopbar > div > a, .adminTopbar button { display: inline-flex; align-items: center; gap: 7px; border: 0; color: #174f73; background: transparent; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.adminTopbar > div > a svg { transform: rotate(45deg); }
+.adminContent { width: min(1320px, 90%); margin: 0 auto; padding: 28px 0 60px; }
+.setupPage { min-height: 100vh; display: grid; place-items: center; padding: 22px; color: #17232c; background: #f3f5f6; }
+.setupCard { width: min(100%, 520px); display: flex; flex-direction: column; align-items: flex-start; gap: 13px; padding: 32px; border: 1px solid #dce2e5; background: #fff; }
+.setupCard > svg { color: #174f73; }
+.setupCard > p { margin: 0; color: #df7030; font-size: 9px; font-weight: 800; letter-spacing: .09em; }
+.setupCard h1 { margin: 0; font-family: var(--font-display), sans-serif; font-size: 32px; line-height: 1.08; }
+.setupCard > span { color: #65717a; font-size: 12px; line-height: 1.6; }
+.setupCard > a { display: inline-flex; align-items: center; gap: 7px; margin-top: 5px; color: #174f73; font-size: 11px; font-weight: 700; }
+@media (max-width: 600px) { .adminTopbar { min-height: 62px; padding: 9px 5%; } .adminTopbar > div { gap: 11px; } .adminTopbar > div > a, .adminTopbar button { font-size: 9px; } .adminContent { width: 92%; padding-top: 20px; } .setupCard { padding: 25px 20px; } .setupCard h1 { font-size: 28px; } }

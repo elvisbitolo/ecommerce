@@ -1,0 +1,15 @@
+.page { min-height: 100vh; padding: 30px max(5vw, calc((100vw - 1160px) / 2)) 70px; color: #17232c; background: #f3f5f5; }
+.back { display: inline-flex; align-items: center; gap: 7px; color: #174f73; font-size: 11px; font-weight: 700; }
+.hero { margin-top: 28px; padding: 55px clamp(24px, 6vw, 75px); color: #fff; background: linear-gradient(120deg, #173b50, #21617b); }
+.hero > p, .kicker { margin: 0 0 10px; color: #f29a60; font-size: 10px; font-weight: 800; letter-spacing: .11em; }
+.hero h1 { margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(38px, 6vw, 64px); line-height: 1.05; }
+.hero > span { display: block; max-width: 620px; margin-top: 13px; color: #d6e0e5; font-size: 14px; line-height: 1.6; }
+.section { padding-top: 42px; }
+.section h2 { margin: 0 0 20px; font-family: var(--font-display), sans-serif; font-size: 31px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #dce2e5; border-left: 1px solid #dce2e5; }
+.grid a { position: relative; min-height: 94px; display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 17px 46px 17px 18px; border-right: 1px solid #dce2e5; border-bottom: 1px solid #dce2e5; color: #17232c; background: #fff; }
+.grid a:hover { color: #174f73; background: #fbfcfc; }
+.grid a strong { font-size: 13px; }
+.grid a span { color: #65717a; font-size: 11px; }
+.grid a svg { position: absolute; top: 50%; right: 17px; color: #174f73; transform: translateY(-50%); }
+@media (max-width: 620px) { .page { padding-top: 20px; } .hero { margin-top: 22px; padding: 40px 23px; } .section h2 { font-size: 26px; } .grid { grid-template-columns: 1fr; } }
