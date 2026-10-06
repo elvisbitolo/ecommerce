@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { categories, products as sampleProducts } from "../../../data/catalog";
+import { prisma } from "../../../lib/prisma";
 import { getSupabaseConfig } from "../../../lib/supabase/config";
 import { getSuperadminClient } from "../../../lib/supabase/admin";
 import ProductManager from "../product-manager";
@@ -34,31 +34,46 @@ export default async function AdminDashboard() {
   const access = await getSuperadminClient();
   if (!access) redirect("/admin");
 
-  const { data, error } = await access.supabase
-    .from("products")
-    .select("id, slug, name, sku, brand, category_name, category_slug, detail, image_url, is_published")
-    .order("updated_at", { ascending: false });
+  const [productRows, categoryRows] = await Promise.all([
+    prisma.product.findMany({
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        sku: true,
+        brand: { select: { name: true } },
+        categories: { select: { slug: true, name: true } },
+        shortDescription: true,
+        images: true,
+        isPublished: true,
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 500,
+    }),
+    prisma.category.findMany({ orderBy: [{ menuOrder: "asc" }, { name: "asc" }] }),
+  ]);
 
-  if (error) throw new Error(`Could not load admin products: ${error.message}`);
+  const savedProducts = productRows.map((row) => {
+    const category = row.categories?.[0];
+    return {
+      id: row.id,
+      slug: row.slug,
+      name: row.name,
+      sku: row.sku ?? "",
+      brand: row.brand?.name ?? "",
+      category: category?.name ?? "",
+      categorySlug: category?.slug ?? "",
+      detail: row.shortDescription ?? "",
+      image: row.images?.[0] ?? "",
+      isPublished: row.isPublished,
+    };
+  });
 
-  const savedProducts = data.map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    name: row.name,
-    sku: row.sku ?? "",
-    brand: row.brand,
-    category: row.category_name,
-    categorySlug: row.category_slug,
-    detail: row.detail,
-    image: row.image_url,
-    isPublished: row.is_published,
+  const categories = categoryRows.map(({ id, name, slug, parentId }) => ({
+    name,
+    slug,
+    parentSlug: parentId ? categoryRows.find((item) => item.id === parentId)?.slug : null,
   }));
-  const savedIds = new Set(savedProducts.map((product) => product.id));
-  const savedSlugs = new Set(savedProducts.map((product) => product.slug));
-  const fixtureProducts = sampleProducts
-    .filter((product) => !savedIds.has(product.id) && !savedSlugs.has(product.slug))
-    .map((product) => ({ ...product, isPublished: true, sku: product.sku ?? "" }));
-  const products = [...savedProducts, ...fixtureProducts];
 
   return (
     <main className={styles.adminShell}>
@@ -68,10 +83,10 @@ export default async function AdminDashboard() {
       </header>
       <div className={styles.adminContent}>
         <ProductManager
-          categories={categories.map(({ name, slug, parentSlug }) => ({ name, slug, parentSlug }))}
-          products={products}
+          categories={categories}
+          products={savedProducts}
           userEmail={access.user.email ?? "Superadmin"}
-          showImportSamples={savedProducts.length === 0}
+          showImportSamples={false}
         />
       </div>
     </main>

@@ -1,9 +1,8 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { categories, products as sampleProducts } from "../../data/catalog";
+import { prisma } from "../../lib/prisma";
 import { getSuperadminClient } from "../../lib/supabase/admin";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 
@@ -46,7 +45,7 @@ export async function saveProduct(product) {
   const detail = String(product.detail ?? "").trim();
   const sku = String(product.sku ?? "").trim();
   const imageUrl = String(product.imageUrl ?? "").trim();
-  const category = categories.find((item) => item.slug === categorySlug);
+  const category = await prisma.category.findUnique({ where: { slug: categorySlug } });
 
   if (!name || !brand || !slug || !category || !imageUrl) {
     return { error: "Name, brand, slug, category, and product image are required." };
@@ -60,24 +59,35 @@ export async function saveProduct(product) {
     return { error: "Enter a valid product image URL or upload an image." };
   }
 
+  let brandRow = await prisma.brand.findFirst({ where: { name: { equals: brand, mode: "insensitive" } } });
+  if (!brandRow) {
+    const brandSlug = brand.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    brandRow = await prisma.brand.upsert({
+      where: { slug: brandSlug },
+      update: { name: brand },
+      create: { name: brand, slug: brandSlug },
+    });
+  }
+
   const record = {
-    id: String(product.id || randomUUID()),
     slug,
     name,
     sku: sku || null,
-    brand,
-    category_name: category.name,
-    category_slug: category.slug,
-    detail,
-    image_url: imageUrl,
-    is_published: product.isPublished === true,
-    updated_at: new Date().toISOString(),
+    brandId: brandRow.id,
+    shortDescription: detail || null,
+    images: [imageUrl],
+    isPublished: product.isPublished === true,
   };
 
-  const { error } = await access.supabase.from("products").upsert(record, { onConflict: "id" });
-  if (error) {
-    if (error.code === "23505") return { error: "That product URL is already in use. Choose a different slug." };
-    return { error: `Could not save this product: ${error.message}` };
+  try {
+    await prisma.product.upsert({
+      where: { slug },
+      update: { ...record, categories: { set: [{ id: category.id }] } },
+      create: { ...record, categories: { connect: [{ id: category.id }] } },
+    });
+  } catch (upsertError) {
+    if (upsertError?.code === "P2002") return { error: "That product URL is already in use. Choose a different slug." };
+    return { error: `Could not save this product: ${upsertError?.message ?? "unknown error"}` };
   }
 
   revalidatePath("/");
@@ -92,20 +102,24 @@ export async function importSampleCatalog() {
   const access = await getSuperadminClient();
   if (!access) return { error: "Your session is no longer authorized. Sign in again." };
 
+  const sampleProducts = await prisma.product.findMany({
+    select: { id: true, slug: true },
+    orderBy: { position: "asc" },
+    take: 12,
+  });
   const records = sampleProducts.map((product) => ({
-    id: product.id,
     slug: product.slug,
     name: product.name,
-    sku: product.sku || null,
-    brand: product.brand,
-    category_name: product.category,
-    category_slug: product.categorySlug,
-    detail: product.detail,
-    image_url: product.image,
-    is_published: true,
+    isPublished: true,
   }));
-  const { error } = await access.supabase.from("products").upsert(records, { onConflict: "id", ignoreDuplicates: true });
-  if (error) return { error: `Could not import the starter catalog: ${error.message}` };
+  if (!records.length) return { error: "The catalog is already populated." };
+
+  for (const product of records) {
+    await prisma.product.update({
+      where: { slug: product.slug },
+      data: { isPublished: true },
+    });
+  }
 
   revalidatePath("/");
   revalidatePath("/shop");
