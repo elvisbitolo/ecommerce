@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { prisma } from "../../../lib/prisma";
+import { toPlainText } from "../../../lib/products";
 import { getSupabaseConfig } from "../../../lib/supabase/config";
 import { getSuperadminClient } from "../../../lib/supabase/admin";
 import ProductManager from "../product-manager";
@@ -63,7 +64,7 @@ export default async function AdminDashboard() {
       brand: row.brand?.name ?? "",
       category: category?.name ?? "",
       categorySlug: category?.slug ?? "",
-      detail: row.shortDescription ?? "",
+      detail: toPlainText(row.shortDescription ?? ""),
       image: row.images?.[0] ?? "",
       isPublished: row.isPublished,
     };

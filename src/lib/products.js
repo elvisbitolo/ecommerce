@@ -13,23 +13,90 @@ const catalogSelect = {
   inStock: true,
 };
 
-function cleanText(value) {
+const NAMED_ENTITIES = {
+  nbsp: " ",
+  amp: "&",
+  quot: '"',
+  apos: "'",
+  lt: "<",
+  gt: ">",
+  hellip: "…",
+  ndash: "–",
+  mdash: "—",
+  lsquo: "‘",
+  rsquo: "’",
+  ldquo: "“",
+  rdquo: "”",
+  times: "×",
+  divide: "÷",
+  deg: "°",
+  bull: "•",
+  middot: "·",
+  trade: "™",
+  reg: "®",
+  copy: "©",
+  sup1: "¹",
+  sup2: "²",
+  sup3: "³",
+  frac12: "½",
+  frac14: "¼",
+  frac34: "¾",
+  le: "≤",
+  ge: "≥",
+  ne: "≠",
+  plusmn: "±",
+  micro: "µ",
+  euro: "€",
+  pound: "£",
+  yen: "¥",
+  cent: "¢",
+  sect: "§",
+};
+
+function safeCodePoint(code, fallback) {
+  if (!Number.isFinite(code) || code < 0 || code > 0x10ffff) return fallback;
+  try {
+    return String.fromCodePoint(code);
+  } catch {
+    return fallback;
+  }
+}
+
+function decodeEntities(text) {
+  let out = String(text);
+  for (let pass = 0; pass < 2; pass++) {
+    const next = out.replace(
+      /&(?:#x([0-9a-f]+)|#(\d+)|([a-z][a-z0-9]+));/gi,
+      (match, hex, dec, name) => {
+        if (hex) return safeCodePoint(parseInt(hex, 16), match);
+        if (dec) return safeCodePoint(Number(dec), match);
+        const key = name.toLowerCase();
+        return Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, key) ? NAMED_ENTITIES[key] : match;
+      }
+    );
+    if (next === out) return out;
+    out = next;
+  }
+  return out;
+}
+
+export function toPlainText(value) {
   if (!value) return "";
-  return String(value)
+  const stripped = String(value)
     .replace(/<li[^>]*>/gi, "\n• ")
-    .replace(/<\/li>/gi, "")
+    .replace(/<\/(p|div|h[1-6]|ul|ol|tr)>/gi, "\n")
     .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/p>/gi, "\n")
-    .replace(/<\/h[1-6]>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/\s+/g, " ")
+    .replace(/<[^>]+>/g, "");
+  return decodeEntities(stripped)
+    .replace(/ /g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
     .trim();
+}
+
+export function cleanText(value) {
+  return toPlainText(value).replace(/\s+/g, " ").trim();
 }
 
 function mapProduct(row) {
